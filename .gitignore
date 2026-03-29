@@ -1,0 +1,53 @@
+# Gradle
+.gradle/
+build/
+
+# Local configuration (SDK path, secrets — never commit)
+local.properties
+
+# Android Studio / IntelliJ
+*.iml
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/deploymentTargetSelector.xml
+# Keep: code styles, run configurations, inspection profiles if you want team sharing
+# .idea/*.xml (uncomment to ignore entire .idea except .gitignore)
+
+# Kotlin
+.kotlin/
+
+# NDK / CMake
+.externalNativeBuild/
+.cxx/
+
+# Captures / profiling
+captures/
+*.hprof
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Signing (never commit keys)
+*.jks
+*.keystore
+*.p12
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# Bundle artifacts (if built outside build/)
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Logs
+*.log

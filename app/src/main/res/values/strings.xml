@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">odowatch</string>
+    <string name="tab_vehicles">Vehicles</string>
+    <string name="tab_profile">Profile</string>
+    <string name="vehicles_title">My Cars</string>
+    <string name="profile_title">Profile</string>
+    <string name="odometer_reading">Odometer: %1$s mi</string>
+    <string name="miles_till_service">Next service in %1$s mi</string>
+    <string name="edit_vehicle">Edit vehicle</string>
+    <string name="add_vehicle">Add vehicle</string>
+    <string name="back">Back</string>
+    <string name="field_vehicle_name">Vehicle name</string>
+    <string name="vehicle_name_example">e.g. My Civic</string>
+    <string name="field_odometer">Odometer (mi)</string>
+    <string name="field_miles_till_service">Miles until next service</string>
+    <string name="estimated_miles_readout">Estimated miles: %1$s mi</string>
+    <string name="save">Save</string>
+    <string name="save_vehicle_failed">Could not save vehicle</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="no_account">Don\'t have an account? Sign Up</string>
+    <string name="already_have_account">Already have an account? Login</string>
+    <string name="sign_out">Sign Out</string>
+</resources>

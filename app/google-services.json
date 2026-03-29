@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "303235252413",
+    "project_id": "odowatch",
+    "storage_bucket": "odowatch.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:303235252413:android:bb529570dc17605f7cf7d4",
+        "android_client_info": {
+          "package_name": "com.brandon.odowatch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuOuY43ZiJotkf7lOoXpH8j9hmqEgChmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
