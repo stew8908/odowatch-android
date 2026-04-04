@@ -5,7 +5,9 @@
     <string name="vehicles_title">My Cars</string>
     <string name="profile_title">Profile</string>
     <string name="odometer_reading">Odometer: %1$s mi</string>
-    <string name="miles_till_service">Next service in %1$s mi</string>
+    <string name="miles_until_service_adjusted">Miles until service: %1$s mi</string>
+    <string name="vehicle_audio_route_connected">Connected</string>
+    <string name="vehicle_audio_route_connected_icon_desc">Connected to active Bluetooth audio</string>
     <string name="edit_vehicle">Edit vehicle</string>
     <string name="add_vehicle">Add vehicle</string>
     <string name="back">Back</string>
@@ -23,4 +25,9 @@
     <string name="no_account">Don\'t have an account? Sign Up</string>
     <string name="already_have_account">Already have an account? Login</string>
     <string name="sign_out">Sign Out</string>
+    <string name="audio_route_section_title">Current audio output</string>
+    <string name="audio_route_none_bluetooth">No Bluetooth audio device is active for playback.</string>
+    <string name="bluetooth_permission_rationale">Allow Bluetooth access to read the active audio device address (used as route ID).</string>
+    <string name="bluetooth_permission_grant">Allow Bluetooth</string>
+    <string name="bluetooth_mac_unavailable">Address unavailable (privacy restriction or not exposed)</string>
 </resources>

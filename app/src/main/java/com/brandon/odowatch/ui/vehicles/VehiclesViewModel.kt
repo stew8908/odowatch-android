@@ -115,14 +115,23 @@ class VehiclesViewModel : ViewModel() {
         }
         viewModelScope.launch {
             try {
-                val withOwner = updated.copy(ownerId = userId)
+                val withDefaults = if (isNew && updated.image.isBlank()) {
+                    updated.copy(image = "default.png")
+                } else {
+                    updated
+                }
+                val withOwner = withDefaults.copy(ownerId = userId)
                 val data = withOwner.toFirestoreMap()
                 db.collection("vehicles").document(updated.id)
                     .set(data, SetOptions.merge())
                     .await()
                 if (isNew) {
+                    // Merge so the user doc is created if missing (update alone would fail).
                     db.collection("users").document(userId)
-                        .update("ownedVehicles", FieldValue.arrayUnion(updated.id))
+                        .set(
+                            hashMapOf("ownedVehicles" to FieldValue.arrayUnion(updated.id)),
+                            SetOptions.merge(),
+                        )
                         .await()
                 }
                 onFinished?.invoke(null)

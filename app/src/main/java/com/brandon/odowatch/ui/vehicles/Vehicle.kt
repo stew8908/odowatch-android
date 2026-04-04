@@ -16,3 +16,10 @@ data class Vehicle(
     val pendingInvites: List<String> = emptyList(),
     val routeUUID: String? = null,
 )
+
+/** Odometer shown in the list: stored odometer plus estimated miles since last sync. */
+fun Vehicle.listDisplayOdometer(): Long = initialOdometer + estimatedMiles
+
+/** Miles until next service: `nextOilChange - initialOdometer + estimatedMiles` (negative if overdue). */
+fun Vehicle.milesUntilNextServiceAdjusted(): Long =
+    nextOilChange - initialOdometer + estimatedMiles
