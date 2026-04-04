@@ -1,12 +1,18 @@
 package com.brandon.odowatch.ui.auth
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class AuthViewModel : ViewModel() {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     private val _currentUser = MutableStateFlow(auth.currentUser)
     val currentUser = _currentUser.asStateFlow()
@@ -32,17 +38,45 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun signUp(email: String, pass: String, onResult: (Boolean, String?) -> Unit) {
-        if (email.isBlank() || pass.isBlank()) {
+    fun signUp(
+        email: String,
+        pass: String,
+        username: String,
+        onResult: (Boolean, String?) -> Unit,
+    ) {
+        val trimmedEmail = email.trim()
+        val trimmedUsername = username.trim()
+        if (trimmedEmail.isBlank() || pass.isBlank()) {
             onResult(false, "Email and password cannot be empty")
             return
         }
-        auth.createUserWithEmailAndPassword(email, pass)
+        if (trimmedUsername.isBlank()) {
+            onResult(false, "Username cannot be empty")
+            return
+        }
+        auth.createUserWithEmailAndPassword(trimmedEmail, pass)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onResult(true, null)
-                } else {
+                if (!task.isSuccessful) {
                     onResult(false, task.exception?.message)
+                    return@addOnCompleteListener
+                }
+                val uid = auth.currentUser?.uid
+                if (uid == null) {
+                    onResult(false, "Not signed in")
+                    return@addOnCompleteListener
+                }
+                viewModelScope.launch {
+                    try {
+                        db.collection("users").document(uid)
+                            .set(
+                                newUserDocument(trimmedEmail, trimmedUsername),
+                                SetOptions.merge(),
+                            )
+                            .await()
+                        onResult(true, null)
+                    } catch (e: Exception) {
+                        onResult(false, e.message)
+                    }
                 }
             }
     }
@@ -51,3 +85,14 @@ class AuthViewModel : ViewModel() {
         auth.signOut()
     }
 }
+
+/**
+ * Default `users/{uid}` shape used elsewhere in the app (e.g. [com.brandon.odowatch.ui.vehicles.VehiclesViewModel]).
+ * New accounts get the same fields as existing users, with empty collections where appropriate.
+ */
+private fun newUserDocument(email: String, username: String): HashMap<String, Any> =
+    hashMapOf(
+        "email" to email,
+        "username" to username,
+        "ownedVehicles" to emptyList<String>(),
+    )

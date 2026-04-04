@@ -34,6 +34,7 @@ fun SignUpScreen(
     onNavigateToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -50,6 +51,15 @@ fun SignUpScreen(
             style = MaterialTheme.typography.headlineMedium
         )
         Spacer(modifier = Modifier.height(32.dp))
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = { Text(stringResource(R.string.field_username)) },
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true,
+            placeholder = { Text(stringResource(R.string.username_example)) },
+        )
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -69,7 +79,15 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = {
-                viewModel.signUp(email, password) { success, error ->
+                if (username.isBlank()) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.signup_username_required),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                    return@Button
+                }
+                viewModel.signUp(email, password, username.trim()) { success, error ->
                     if (!success) {
                         Toast.makeText(context, error ?: "Sign Up failed", Toast.LENGTH_SHORT).show()
                     }

@@ -141,6 +141,32 @@ class VehiclesViewModel : ViewModel() {
         }
     }
 
+    fun deleteVehicle(
+        vehicleId: String,
+        onFinished: ((Throwable?) -> Unit)? = null,
+    ) {
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            onFinished?.invoke(IllegalStateException("Not signed in"))
+            return
+        }
+        viewModelScope.launch {
+            try {
+                val batch = db.batch()
+                batch.delete(db.collection("vehicles").document(vehicleId))
+                batch.update(
+                    db.collection("users").document(userId),
+                    "ownedVehicles",
+                    FieldValue.arrayRemove(vehicleId),
+                )
+                batch.commit().await()
+                onFinished?.invoke(null)
+            } catch (e: Exception) {
+                onFinished?.invoke(e)
+            }
+        }
+    }
+
     override fun onCleared() {
         userDocListener?.remove()
         clearVehicleDocListeners()

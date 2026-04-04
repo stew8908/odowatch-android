@@ -16,8 +16,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -32,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -39,10 +42,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.brandon.odowatch.R
 import com.brandon.odowatch.audio.hasBluetoothAudioPermission
+import com.brandon.odowatch.location.DriveTrackingSessionState
 import com.brandon.odowatch.audio.rememberBluetoothAudioOutputs
 import com.brandon.odowatch.audio.routeUuidMatchesActiveBluetooth
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.math.abs
 
 private val ConnectedGreen = Color(0xFF2E7D32)
 
@@ -75,6 +80,14 @@ fun VehicleListScreen(
     )
 
     val numberFormat = NumberFormat.getNumberInstance(Locale.getDefault())
+    val connectedOdometerFormat = remember {
+        NumberFormat.getNumberInstance(Locale.getDefault()).apply {
+            maximumFractionDigits = 1
+            minimumFractionDigits = 0
+        }
+    }
+
+    val driveSession by DriveTrackingSessionState.activeSession.collectAsStateWithLifecycle()
 
     Column(modifier = modifier.fillMaxSize()) {
         TopAppBar(
@@ -97,10 +110,21 @@ fun VehicleListScreen(
                     vehicle.routeUUID,
                     activeBluetoothOutputs,
                 )
+                val liveSessionMiles =
+                    driveSession
+                        ?.takeIf { routeMatches && it.vehicleId == vehicle.id }
+                        ?.sessionMiles
+                        ?: 0.0
+                val odometerFormatted = if (routeMatches) {
+                    connectedOdometerFormat.format(vehicle.listDisplayOdometerWithSession(liveSessionMiles))
+                } else {
+                    numberFormat.format(vehicle.listDisplayOdometer())
+                }
                 VehicleRow(
                     vehicle = vehicle,
-                    odometerFormatted = numberFormat.format(vehicle.listDisplayOdometer()),
-                    milesUntilServiceFormatted = numberFormat.format(vehicle.milesUntilNextServiceAdjusted()),
+                    odometerFormatted = odometerFormatted,
+                    milesUntil = vehicle.milesUntilNextService(liveSessionMiles),
+                    numberFormat = numberFormat,
                     isActiveAudioRoute = routeMatches,
                     onClick = { onVehicleClick(vehicle.id) },
                 )
@@ -114,10 +138,29 @@ fun VehicleListScreen(
 private fun VehicleRow(
     vehicle: Vehicle,
     odometerFormatted: String,
-    milesUntilServiceFormatted: String,
+    milesUntil: Long,
+    numberFormat: NumberFormat,
     isActiveAudioRoute: Boolean,
     onClick: () -> Unit,
 ) {
+    val odometerLineColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val (serviceText, serviceColor) = when {
+        milesUntil < 0L ->
+            stringResource(
+                R.string.service_overdue,
+                numberFormat.format(abs(milesUntil)),
+            ) to MaterialTheme.colorScheme.error
+        milesUntil < 500L ->
+            stringResource(
+                R.string.miles_until_service_soon,
+                numberFormat.format(milesUntil),
+            ) to MaterialTheme.colorScheme.error
+        else ->
+            stringResource(
+                R.string.next_service_with_miles,
+                numberFormat.format(milesUntil),
+            ) to MaterialTheme.colorScheme.onSurfaceVariant
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -140,16 +183,38 @@ private fun VehicleRow(
                 text = vehicle.vehicleName,
                 style = MaterialTheme.typography.titleMedium,
             )
-            Text(
-                text = stringResource(R.string.odometer_reading, odometerFormatted),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(
-                text = stringResource(R.string.miles_until_service_adjusted, milesUntilServiceFormatted),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Speed,
+                    contentDescription = stringResource(R.string.cd_odometer_icon),
+                    modifier = Modifier.size(20.dp),
+                    tint = odometerLineColor,
+                )
+                Text(
+                    text = stringResource(R.string.odometer_reading, odometerFormatted),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = odometerLineColor,
+                )
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Build,
+                    contentDescription = stringResource(R.string.cd_service_tools_icons),
+                    modifier = Modifier.size(18.dp),
+                    tint = serviceColor,
+                )
+                Text(
+                    text = serviceText,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = serviceColor,
+                )
+            }
         }
         if (isActiveAudioRoute) {
             Row(

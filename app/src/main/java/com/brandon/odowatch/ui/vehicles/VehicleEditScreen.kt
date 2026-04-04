@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +52,7 @@ fun VehicleEditScreen(
     vehicle: Vehicle,
     onSave: (Vehicle) -> Unit,
     onBack: () -> Unit,
+    onDelete: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     isNew: Boolean = false,
 ) {
@@ -82,6 +84,8 @@ fun VehicleEditScreen(
     var milesTillServiceText by remember(vehicle.id) {
         mutableStateOf(if (isNew && vehicle.nextOilChange == 0L) "" else vehicle.nextOilChange.toString())
     }
+
+    var showDeleteConfirm by remember(vehicle.id) { mutableStateOf(false) }
 
     val displayedEstimatedMiles = remember(odometerText, vehicle.initialOdometer, vehicle.estimatedMiles) {
         val parsedOdometer = odometerText.toLongOrNull()
@@ -173,6 +177,17 @@ fun VehicleEditScreen(
             ) {
                 Text(stringResource(R.string.save))
             }
+            if (!isNew && onDelete != null) {
+                TextButton(
+                    onClick = { showDeleteConfirm = true },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete_vehicle),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            }
             if (isNew) {
                 OutlinedCard(
                     modifier = Modifier.fillMaxWidth(),
@@ -238,5 +253,31 @@ fun VehicleEditScreen(
                 }
             }
         }
+    }
+
+    if (showDeleteConfirm && onDelete != null) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirm = false },
+            title = { Text(stringResource(R.string.delete_vehicle_confirm_title)) },
+            text = { Text(stringResource(R.string.delete_vehicle_confirm_message)) },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirm = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteConfirm = false
+                        onDelete()
+                    },
+                ) {
+                    Text(
+                        stringResource(R.string.delete),
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+            },
+        )
     }
 }

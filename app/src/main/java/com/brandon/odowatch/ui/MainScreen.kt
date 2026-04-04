@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.brandon.odowatch.R
+import com.brandon.odowatch.location.DriveTrackingCoordinator
 import com.brandon.odowatch.ui.auth.AuthViewModel
 import com.brandon.odowatch.ui.auth.LoginScreen
 import com.brandon.odowatch.ui.auth.SignUpScreen
@@ -69,6 +70,9 @@ private fun AppContent(
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(MainTab.Vehicles) }
     val vehiclesViewModel: VehiclesViewModel = viewModel()
+    val vehicles by vehiclesViewModel.vehicles.collectAsStateWithLifecycle()
+
+    DriveTrackingCoordinator(vehicles = vehicles)
 
     Scaffold(
         modifier = modifier.fillMaxSize(),

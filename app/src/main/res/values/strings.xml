@@ -5,7 +5,11 @@
     <string name="vehicles_title">My Cars</string>
     <string name="profile_title">Profile</string>
     <string name="odometer_reading">Odometer: %1$s mi</string>
-    <string name="miles_until_service_adjusted">Miles until service: %1$s mi</string>
+    <string name="service_overdue">Service overdue · %1$s mi</string>
+    <string name="next_service_with_miles">Next service · %1$s mi</string>
+    <string name="miles_until_service_soon">%1$s mi until service</string>
+    <string name="cd_odometer_icon">Odometer</string>
+    <string name="cd_service_tools_icons">Service interval</string>
     <string name="vehicle_audio_route_connected">Connected</string>
     <string name="vehicle_audio_route_connected_icon_desc">Connected to active Bluetooth audio</string>
     <string name="edit_vehicle">Edit vehicle</string>
@@ -17,9 +21,18 @@
     <string name="field_miles_till_service">Miles until next service</string>
     <string name="estimated_miles_readout">Estimated miles: %1$s mi</string>
     <string name="save">Save</string>
+    <string name="delete_vehicle">Delete vehicle</string>
+    <string name="delete_vehicle_confirm_title">Are you sure?</string>
+    <string name="delete_vehicle_confirm_message">This vehicle will be removed from your account and deleted permanently.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
     <string name="save_vehicle_failed">Could not save vehicle</string>
+    <string name="delete_vehicle_failed">Could not delete vehicle</string>
     <string name="login">Login</string>
     <string name="signup">Sign Up</string>
+    <string name="field_username">Username</string>
+    <string name="username_example">e.g. brandon</string>
+    <string name="signup_username_required">Please enter a username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="no_account">Don\'t have an account? Sign Up</string>
@@ -30,4 +43,7 @@
     <string name="bluetooth_permission_rationale">Allow Bluetooth access to read the active audio device address (used as route ID).</string>
     <string name="bluetooth_permission_grant">Allow Bluetooth</string>
     <string name="bluetooth_mac_unavailable">Address unavailable (privacy restriction or not exposed)</string>
+    <string name="notif_drive_channel_name">Drive distance</string>
+    <string name="notif_drive_tracking_title">Recording trip distance</string>
+    <string name="notif_drive_tracking_body">Session miles: %1$s mi (saved when Bluetooth disconnects)</string>
 </resources>
