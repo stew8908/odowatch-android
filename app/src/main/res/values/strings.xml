@@ -38,6 +38,11 @@
     <string name="no_account">Don\'t have an account? Sign Up</string>
     <string name="already_have_account">Already have an account? Login</string>
     <string name="sign_out">Sign Out</string>
+    <string name="profile_no_username">No username set</string>
+    <string name="delete_account">Delete account</string>
+    <string name="delete_account_confirm_title">Are you sure?</string>
+    <string name="delete_account_confirm_message">Your account, profile, and saved vehicles will be permanently deleted. This cannot be undone.</string>
+    <string name="delete_account_failed">Could not delete account</string>
     <string name="audio_route_section_title">Current audio output</string>
     <string name="audio_route_none_bluetooth">No Bluetooth audio device is active for playback.</string>
     <string name="bluetooth_permission_rationale">Allow Bluetooth access to read the active audio device address (used as route ID).</string>

@@ -32,7 +32,11 @@ class VehiclesViewModel : ViewModel() {
     private val aggregateLock = Any()
 
     init {
-        loadVehicles()
+        // Fires immediately with the current user and again on sign-in / sign-out / token refresh.
+        // init { loadVehicles() } alone can miss the user if currentUser was briefly null (race with restore).
+        auth.addAuthStateListener {
+            loadVehicles()
+        }
     }
 
     private fun loadVehicles() {
@@ -40,7 +44,15 @@ class VehiclesViewModel : ViewModel() {
         userDocListener?.remove()
         userDocListener = null
 
-        val userId = auth.currentUser?.uid ?: return
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
+            synchronized(aggregateLock) {
+                ownedVehicleIds = emptyList()
+                vehicleById.clear()
+                _vehicles.value = emptyList()
+            }
+            return
+        }
 
         userDocListener = db.collection("users").document(userId)
             .addSnapshotListener { userSnap, error ->
