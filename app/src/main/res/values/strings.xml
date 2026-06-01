@@ -1,9 +1,33 @@
 <resources>
-    <string name="app_name">odowatch</string>
+    <string name="app_name">odoblu</string>
     <string name="tab_vehicles">Vehicles</string>
     <string name="tab_profile">Profile</string>
     <string name="vehicles_title">My Cars</string>
     <string name="profile_title">Profile</string>
+    <string name="profile_section_profile">Profile</string>
+    <string name="profile_username_line">UserName: %1$s</string>
+    <string name="profile_subscription_info_title">Subscription Information</string>
+    <string name="profile_subscription_prefix_colon">Subscription:</string>
+    <string name="profile_subscription_odowatch_pro">Odoblu Pro</string>
+    <string name="vehicle_limit_reached">Vehicle limit reached. Upgrade to Pro for up to 5 vehicles.</string>
+    <string name="profile_upgrade_to_pro">Upgrade to Pro</string>
+    <string name="profile_subscription_checking">Checking subscription…</string>
+    <string name="profile_paywall_failed">Couldn\'t open subscription</string>
+    <string name="profile_subscription_length">Length: Monthly (auto-renewable)</string>
+    <string name="profile_subscription_price">Price: $4.99 per month</string>
+    <string name="profile_terms_of_use">Terms of Use (EULA)</string>
+    <string name="profile_privacy_policy">Privacy Policy</string>
+    <string name="profile_service_reminders_title">Service Reminders</string>
+    <string name="profile_reminder_threshold_label">Reminder Threshold:</string>
+    <string name="profile_reminder_miles_value">%1$s miles</string>
+    <string name="profile_reminder_threshold_hint">When Bluetooth disconnects, you\'ll be notified if any vehicle is within this many miles of its next service (or overdue).</string>
+    <string name="profile_notification_status_label">Notification Status:</string>
+    <string name="profile_notifications_enabled">Notifications enabled</string>
+    <string name="profile_notifications_disabled">Notifications disabled</string>
+    <string name="profile_open_link_cd">Open in browser</string>
+    <string name="profile_could_not_open_link">Could not open link</string>
+    <string name="url_terms_of_use" translatable="false">https://odowatch-web.vercel.app/terms</string>
+    <string name="url_privacy_policy" translatable="false">https://odowatch-web.vercel.app/privacy</string>
     <string name="odometer_reading">Odometer: %1$s mi</string>
     <string name="service_overdue">Service overdue · %1$s mi</string>
     <string name="next_service_with_miles">Next service · %1$s mi</string>
@@ -39,7 +63,7 @@
     <string name="already_have_account">Already have an account? Login</string>
     <string name="sign_out">Sign Out</string>
     <string name="profile_no_username">No username set</string>
-    <string name="delete_account">Delete account</string>
+    <string name="delete_account">Delete Account</string>
     <string name="delete_account_confirm_title">Are you sure?</string>
     <string name="delete_account_confirm_message">Your account, profile, and saved vehicles will be permanently deleted. This cannot be undone.</string>
     <string name="delete_account_failed">Could not delete account</string>
@@ -51,4 +75,12 @@
     <string name="notif_drive_channel_name">Drive distance</string>
     <string name="notif_drive_tracking_title">Recording trip distance</string>
     <string name="notif_drive_tracking_body">Session miles: %1$s mi (saved when Bluetooth disconnects)</string>
+    <string name="notif_service_reminder_channel_name">Service reminders</string>
+    <string name="notif_service_reminder_title">Vehicle service</string>
+    <string name="notif_service_reminder_one">%1$s may need service soon</string>
+    <string name="notif_service_reminder_many">%1$d vehicles may need service soon</string>
+    <string name="notif_miles_remaining">%1$d mi to go</string>
+    <string name="notif_miles_overdue">%1$d mi overdue</string>
+    <string name="notif_miles_due_now">Due now</string>
+    <string name="vehicle_unnamed">Vehicle</string>
 </resources>

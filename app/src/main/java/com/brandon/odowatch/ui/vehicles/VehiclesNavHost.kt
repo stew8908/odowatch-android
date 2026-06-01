@@ -21,6 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import java.util.UUID
 
+private fun maxVehicles(isPro: Boolean?) = if (isPro == true) 5 else 2
+
 private const val ROUTE_LIST = "vehicles_list"
 private const val ROUTE_EDIT = "vehicle_edit/{vehicleId}"
 private const val ARG_VEHICLE_ID = "vehicleId"
@@ -32,6 +34,8 @@ private fun NavController.popToVehicleList(): Boolean =
 @Composable
 fun VehiclesNavHost(
     viewModel: VehiclesViewModel,
+    isPro: Boolean?,
+    onLimitReached: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
@@ -39,6 +43,7 @@ fun VehiclesNavHost(
     val context = LocalContext.current
     val saveFailedMessage = stringResource(R.string.save_vehicle_failed)
     val deleteFailedMessage = stringResource(R.string.delete_vehicle_failed)
+    val vehicleLimitMessage = stringResource(R.string.vehicle_limit_reached)
 
     NavHost(
         navController = navController,
@@ -52,7 +57,12 @@ fun VehiclesNavHost(
                     navController.navigate("vehicle_edit/$id")
                 },
                 onAddVehicleClick = {
-                    navController.navigate("vehicle_edit/new")
+                    if (vehicles.size >= maxVehicles(isPro)) {
+                        Toast.makeText(context, vehicleLimitMessage, Toast.LENGTH_LONG).show()
+                        onLimitReached()
+                    } else {
+                        navController.navigate("vehicle_edit/new")
+                    }
                 },
             )
         }
